@@ -1,5 +1,7 @@
 # Backdoor-Adjustierung: die Hintertüren schließen – Streamlit-Demo
 
+**[→ Demo live ausprobieren](https://sebastianhanisch-backdoor-demo.streamlit.app/)**
+
 Drittes Stück der Linie **Kausale Diagramme und Adjustierung** in der „Konzepte“-Reihe im Portfolio von [Sebastian Hanisch](https://sebastianhanisch.net) (Operations Research und Machine Learning). Nachfolger von [d-separation-demo](https://github.com/sebastian-hanisch/d-separation-demo): Dort stand, was ein Diagramm über die Daten behauptet. Hier steht, welche Variablen man festhalten muss, damit ein Koeffizient die Wirkung trifft.
 
 ## Kernfrage
@@ -93,4 +95,4 @@ Streamlit Cloud: Python 3.12.
 
 Gebaut mit Streamlit, Plotly, numpy, pandas und fpdf2.
 
-Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zu den Demos: [Interaktive Demos](https://sebastianhanisch.net/demos.html).
+Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zur Reihe: [Kausale Diagramme: von Konfundierung bis Wahl](https://sebastianhanisch.net/konzepte-kausale-diagramme.html).
