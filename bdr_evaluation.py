@@ -301,7 +301,7 @@ def verdict_sets(rows: list) -> tuple[str, str]:
 def verdict_recipes(res: dict) -> tuple[str, str]:
     a = res["all"]["alle anderen Variablen"] / res["n_all"]
     b = res["with_parent"]["alle anderen Variablen"] / res["n_parent"]
-    return "warning", (f"„Alle anderen Variablen kontrollieren“ ist nur in {de(100 * a, 0)} % der Diagramme gültig ({de(100 * b, 0)} %, wenn x einen Elternknoten hat); "
+    return "warning", (f"„Alle anderen Variablen kontrollieren“ ist nur in {de(100 * a, 0)} % der Zufallsdiagramme gültig ({de(100 * b, 0)} %, wenn x einen Elternknoten hat); "
                        "die Eltern von x oder alle Nicht-Nachfahren sind es immer.")
 
 
@@ -314,5 +314,5 @@ def verdict_criterion(c: dict) -> tuple[str, str]:
 
 def verdict_hidden(h: dict) -> tuple[str, str]:
     cases, none = h["common"]
-    return "warning", (f"Ist die fehlende Variable eine gemeinsame Ursache von x und y, gibt es in {de(100 * none / max(cases, 1), 0)} % von {cases} Fällen keine gültige "
+    return "warning", (f"Ist die fehlende Variable ein Vorfahr von x (auch ein Vorfahr, der nur über x auf y wirkt), gibt es in {de(100 * none / max(cases, 1), 0)} % von {cases} Fällen keine gültige "
                        f"beobachtete Menge; in den übrigen {h['other'][0]} Fällen in {de(100 * h['other'][1] / max(h['other'][0], 1), 0)} %.")

@@ -88,8 +88,8 @@ st.title("🚪 Backdoor-Adjustierung: die Hintertüren schließen")
 st.markdown(
     """
 **Man kontrolliert nicht alles, sondern sperrt die Rückwege.** Dies ist das dritte Stück der Linie **Kausale Diagramme und Adjustierung**. Das erste Stück hat gezeigt,
-dass der naive Vergleich daneben liegt, das zweite, wie man aus einem Diagramm seine Aussagen liest. Hier steht die Handlungsanweisung: Welche Variablen muss man
-festhalten, damit der Koeffizient des Faktors die Wirkung trifft? Das **Backdoor-Kriterium** beantwortet es aus dem Diagramm allein: Die Menge darf keinen Nachfahren
+dass der naive Vergleich daneben liegt, das zweite, wie man aus einem Diagramm seine Aussagen liest. Hier steht die Handlungsanweisung: Welche Variablen darf man
+festhalten, damit der Koeffizient des Faktors die Wirkung trifft? Das **Backdoor-Kriterium** beantwortet es, wenn das Diagramm stimmt, aus dem Diagramm allein: Die Menge darf keinen Nachfahren
 des Faktors enthalten und muss jeden Pfad blockieren, der mit einem Pfeil **in** den Faktor hineinführt.
 
 Weiter unten: vier Experimente (**🔬**), **🚧 Wo die Annahmen enden** und der Expander **📐 Mathematische Formulierung**.
@@ -244,9 +244,9 @@ st.markdown(
 | Annahme | Was passiert, wenn sie verletzt ist | Wer setzt an |
 |---|---|---|
 | **Das Diagramm ist richtig** | Das Kriterium ist eine Aussage über das gezeichnete Diagramm. Fehlt ein Pfeil, den es in der Welt gibt, kann eine „gültige“ Menge daneben liegen. | Wie falsch darf das Diagramm sein? |
-| **Alle relevanten Variablen sind beobachtet** | Bei einer verborgenen gemeinsamen Ursache gibt es in {de(100 * res4['common'][1] / max(res4['common'][0], 1), 0)} % der Fälle keine gültige Menge (Experiment 4). | Frontdoor, Instrumente |
-| **Mehr Kontrolle ist besser** | „Alle anderen Variablen“ ist nur in {de(100 * allr, 0)} % der Diagramme gültig (Experiment 2); Nachfahren und Collider machen es ungültig. | Schlechte Kontrollen |
-| **Die gültige Menge ist die beste** | Gültig heißt unverzerrt, nicht genau: Mengen unterscheiden sich in der Streuung der Schätzung. | Welche Menge? |
+| **Alle relevanten Variablen sind beobachtet** | Bei einem verborgenen Vorfahren von x gibt es in {de(100 * res4['common'][1] / max(res4['common'][0], 1), 0)} % der Zufallsfälle keine gültige Menge (Experiment 4); bei einer echten gemeinsamen Ursache häufiger. | Frontdoor, Instrumente |
+| **Mehr Kontrolle ist besser** | „Alle anderen Variablen“ ist nur in {de(100 * allr, 0)} % der Zufallsdiagramme dieser Demo gültig (Experiment 2); Nachfahren und Collider machen es ungültig. | Schlechte Kontrollen |
+| **Die gültige Menge ist die beste** | Gültig heißt unverzerrt, nicht genau: Mengen können sich in der Streuung der Schätzung unterscheiden. | Welche Menge? |
 | **Es gibt Vergleichsstandorte mit und ohne hohen Faktor** | Das Kriterium sagt nichts über die Überlappung; bei fast deterministischer Auswahl fehlen Vergleiche. | Schätzen |
 | **Die Regression ist die richtige Form** | Die Demo schätzt linear. Nichtlineare Abhängigkeiten verlangen andere Schätzer. | Doppelt robust und Double ML |
 """

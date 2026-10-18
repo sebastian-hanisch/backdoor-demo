@@ -2,7 +2,7 @@
 
 **[→ Demo live ausprobieren](https://sebastianhanisch-backdoor-demo.streamlit.app/)**
 
-Drittes Stück der Linie **Kausale Diagramme und Adjustierung** in der „Konzepte“-Reihe im Portfolio von [Sebastian Hanisch](https://sebastianhanisch.net) (Operations Research und Machine Learning). Nachfolger von [d-separation-demo](https://github.com/sebastian-hanisch/d-separation-demo): Dort stand, was ein Diagramm über die Daten behauptet. Hier steht, welche Variablen man festhalten muss, damit ein Koeffizient die Wirkung trifft.
+Drittes Stück der Linie **Kausale Diagramme und Adjustierung** in der „Konzepte“-Reihe im Portfolio von [Sebastian Hanisch](https://sebastianhanisch.net) (Operations Research und Machine Learning). Nachfolger von [d-separation-demo](https://github.com/sebastian-hanisch/d-separation-demo): Dort stand, was ein Diagramm über die Daten behauptet. Hier steht, welche Variablen man festhalten darf, damit ein Koeffizient die Wirkung trifft.
 
 ## Kernfrage
 
@@ -19,7 +19,7 @@ Man kontrolliert nicht „alles“, sondern sperrt die Rückwege. Das **Backdoor
 - **Backdoor-Kriterium** (Pearl) über die Pfade mit Blockierungsgrund aus `dsep_graph.py` (wortgleich aus d-separation-demo). Der Graph ohne die von x ausgehenden Kanten ist der zweite Rechenweg im Test.
 - **Adjustierungskriterium** (Shpitser, VanderWeele, Robins) als allgemeinere Zusatzzeile: Es erlaubt auch Nachfahren von x, wenn sie auf keinem kausalen Pfad liegen und keine Verzerrung öffnen.
 - **Schätzer:** Koeffizient von x in der linearen Regression auf x und Z mit 95-%-Intervall (Normalnäherung). Die Adjustierungsformel steht im 📐-Expander.
-- **Experimente** laufen über feste Zufallsströme (SplitMix64, ganzzahlig, plattformstabil).
+- **Experimente** laufen über feste Zufallsströme (SplitMix64, ganzzahlig); die Zufallsdiagramme sind exakt reproduzierbar, Normalverteilte bis auf die letzte Stelle.
 
 ## Befunde (gemessen, keine Behauptungen)
 
@@ -27,28 +27,28 @@ Alle Zahlen stehen in `tests/test_claims.py`.
 
 | Frage | Befund | Test |
 |---|---|---|
-| Welche Mengen treffen in der 6-Knoten-Welt die Wirkung 0,50? | **8 von 16** Mengen sind gültig: genau die, die die Schwankung enthalten. Deckung des 95-%-Intervalls bei n = 500: zwischen 94 und 97 %, im Mittel 96 %. Die 8 ungültigen decken in **0 %**. | `test_experiment_1_eight_of_sixteen_sets_are_valid_all_with_the_fluctuation`, `test_experiment_1_coverage_valid_about_ninety_six_invalid_zero` |
+| Welche Mengen treffen in der 6-Knoten-Welt die Wirkung 0,50? | **8 von 16** Mengen sind gültig: genau die, die die Schwankung enthalten. Deckung des 95-%-Intervalls bei n = 500: rund 95 % (94 bis 97 % in 300 Wiederholungen). Die 8 ungültigen decken in **0 %**. | `test_experiment_1_eight_of_sixteen_sets_are_valid_all_with_the_fluctuation`, `test_experiment_1_coverage_valid_about_ninety_six_invalid_zero` |
 | Wie groß ist der Fehler ungültiger Mengen? | In der Population −0,55 (leere Menge, Wetter), −0,36 (Lieferverzug), −0,30 (Region); die Schätzung liegt bei 0,2 bis −0,06 statt 0,50. Die gültigen Mengen haben den Fehler 0. | `test_experiment_1_population_errors_of_the_invalid_sets` |
 | Zwei Rückwege | Faktor ← Schwankung → Servicegrad und Faktor ← Schwankung ← Region → Lieferverzug → Servicegrad; beide laufen über die Schwankung. | `test_the_two_backdoor_paths_of_the_six_node_world` |
 | Standard-Stichprobe (n = 500, Seed 35) | Menge {Schwankung}: Schätzung 0,48, Intervall deckt 0,50; beide Rückwege blockiert. | `test_default_sample_in_the_six_node_world` |
 | Dieselbe Menge in den Diagrammen A und B | {Schwankung} ist in A gültig, in B ungültig (Nachfahre des Faktors); die leere Menge ist in B gültig. | `test_diagrams_a_and_b_give_opposite_verdicts_for_the_same_set` |
 | Alles kontrollieren | Mediator-Welt: Wirkung 0,7 (0,3 direkt + 0,5 · 0,8 über den Bestand). {Schwankung}: 0,7; {Schwankung, Bestand}: **0,3** (nur der direkte Weg). | `test_mediator_world_effect_is_0_7_and_everything_controlled_gives_0_3` |
-| Welche Rezepte gelten? (600 Zufallsdiagramme mit 6 Knoten) | Gültig sind: Eltern von x und alle Nicht-Nachfahren von x in **100 %**; die leere Menge in 70 % (25 %, wenn x einen Elternknoten hat); alle Vorfahren von y in 59 % (70 %); **alle anderen Variablen nur in 14 %** (24 % mit Elternknoten von x). Je Diagramm im Mittel 4,5 gültige Mengen von 16. | `test_experiment_2_recipe_counts`, `test_experiment_2_valid_sets_per_diagram` |
-| Trifft das Kriterium die Wahrheit? (400 Zufallsdiagramme, 6 400 Diagramm-Mengen-Paare, zufällige Koeffizienten, Population) | Von 2 334 gültigen Mengen treffen **alle 2 334** die Wirkung. 903 Paare (14 %) sind ungültig und trotzdem richtig; das Adjustierungskriterium stimmt mit „Koeffizient richtig“ in allen 6 400 Paaren überein. | `test_experiment_3_the_criterion_never_fails_and_is_not_necessary` |
-| Wenn eine Variable fehlt (800 Diagramme mit 7 Knoten, eine zufällig verborgen) | War die verborgene Variable eine gemeinsame Ursache von x und y (115 Fälle), gibt es in **51 %** keine gültige beobachtete Menge; sonst (685 Fälle) in 0 %. | `test_experiment_4_hidden_common_cause` |
+| Welche Rezepte gelten? (600 Zufallsdiagramme mit 6 Knoten) | Gültig sind: Eltern von x und alle Nicht-Nachfahren von x in **100 %**; die leere Menge in 70 % (25 %, wenn x einen Elternknoten hat); alle Vorfahren von y in 59 % (70 %); **alle anderen Variablen nur in 14 %** (24 % mit Elternknoten von x) der Zufallsdiagramme dieser Familie; mit weniger Kanten oder weniger Knoten häufiger, mit mehr seltener. Je Diagramm im Mittel 4,5 gültige Mengen von 16. | `test_experiment_2_recipe_counts`, `test_experiment_2_valid_sets_per_diagram` |
+| Trifft das Kriterium die Wahrheit? (400 Zufallsdiagramme, 6 400 Diagramm-Mengen-Paare, zufällige Koeffizienten, Population) | Von 2 334 gültigen Mengen treffen **alle 2 334** die Wirkung. 903 Paare (14 %) sind ungültig und trotzdem richtig; das Adjustierungskriterium stimmt in allen 6 400 Paaren mit „Koeffizient der Population richtig“ überein (zufällige Koeffizienten). | `test_experiment_3_the_criterion_never_fails_and_is_not_necessary` |
+| Wenn eine Variable fehlt (800 Diagramme mit 7 Knoten, eine zufällig verborgen) | War die verborgene Variable ein Vorfahr von x (115 Fälle), gibt es in **51 %** keine gültige beobachtete Menge; sonst (685 Fälle) in 0 %. Zu den 115 zählen auch Vorfahren, die nur über x auf y wirken; für echte gemeinsame Ursachen liegt der Anteil höher. | `test_experiment_4_hidden_common_cause` |
 
 ## Ehrliche Grenzen
 
 | Annahme | Was passiert, wenn sie verletzt ist | Wer setzt an |
 |---|---|---|
 | **Das Diagramm ist richtig** | Das Kriterium ist eine Aussage über das gezeichnete Diagramm. Fehlt ein Pfeil, den es in der Welt gibt, kann eine „gültige“ Menge daneben liegen. | Wie falsch darf das Diagramm sein? |
-| **Alle relevanten Variablen sind beobachtet** | Bei einer verborgenen gemeinsamen Ursache gibt es in 51 % der Fälle keine gültige Menge. | Frontdoor, Instrumente |
-| **Mehr Kontrolle ist besser** | „Alle anderen Variablen“ ist nur in 14 % der Diagramme gültig. | Schlechte Kontrollen |
-| **Die gültige Menge ist die beste** | Gültig heißt unverzerrt, nicht genau; die Streuung der Schätzung unterscheidet sich je Menge. | Welche Menge? |
+| **Alle relevanten Variablen sind beobachtet** | Bei einem verborgenen Vorfahren von x gibt es in 51 % der Zufallsfälle keine gültige Menge, bei einer echten gemeinsamen Ursache häufiger. | Frontdoor, Instrumente |
+| **Mehr Kontrolle ist besser** | „Alle anderen Variablen“ ist nur in 14 % der Zufallsdiagramme dieser Demo gültig. | Schlechte Kontrollen |
+| **Die gültige Menge ist die beste** | Gültig heißt unverzerrt, nicht genau; die Streuung der Schätzung kann sich je Menge unterscheiden. | Welche Menge? |
 | **Es gibt Vergleichsstandorte mit und ohne hohen Faktor** | Das Kriterium sagt nichts über die Überlappung. | Schätzen |
 | **Die Regression ist die richtige Form** | Die Demo schätzt linear. | Doppelt robust und Double ML |
 
-Die Zahlen gelten für diese erfundene Welt und für zufällige Diagramme dieser Generatorfamilie (6 bis 7 Knoten, Kantenwahrscheinlichkeit 0,3 bis 0,6, Koeffizienten ±0,4 bis ±1,2); „Wahrheit“ ist das simulierte Modell, nicht ein Befund über echte Standorte.
+Die Zahlen gelten für diese erfundene Welt und für zufällige Diagramme dieser Generatorfamilie (6 bis 7 Knoten, Kantenwahrscheinlichkeit 0,3 bis 0,6, in Experiment 4 0,25 bis 0,5, Koeffizienten ±0,4 bis ±1,2); „Wahrheit“ ist das simulierte Modell, nicht ein Befund über echte Standorte.
 
 ## Bezug zu den Nachbarn im Portfolio
 

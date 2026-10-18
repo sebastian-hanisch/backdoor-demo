@@ -147,7 +147,7 @@ def build_criterion_chart(c: dict) -> go.Figure:
 
 
 def build_hidden_chart(h: dict) -> go.Figure:
-    labels = ["verborgen: gemeinsame Ursache von x und y", "verborgen: sonst"]
+    labels = ["verborgen: Vorfahr von x", "verborgen: sonst"]
     vals = [100 * h["common"][1] / max(h["common"][0], 1), 100 * h["other"][1] / max(h["other"][0], 1)]
     fig = go.Figure(go.Bar(x=labels, y=vals, marker_color=[C.COLOR_FORBIDDEN, C.COLOR_CAUSAL], text=[de(v, 0) + " %" for v in vals], textposition="outside"))
     fig.update_yaxes(title="keine gültige beobachtete Menge (%)", range=[0, 105])
